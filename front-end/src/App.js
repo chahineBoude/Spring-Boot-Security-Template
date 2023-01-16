@@ -1,26 +1,32 @@
 import "./App.css";
-import { React } from "react";
+import { React, useEffect } from "react";
+import { useLocalState } from "./utils/useLocalStorage";
+import { Routes, Route } from "react-router-dom";
+import Dashboard from "./components/Dashboard";
+import Homepage from "./components/Homepage";
+import Login from "./components/Login";
+import PrivateRoute from "./components/PrivateRoute";
 
 function App() {
-  fetch("http://localhost:8080/api/auth/login", {
-    headers: {
-      "Content-Type": "application/json",
-    },
-    method: "POST",
-    body: JSON.stringify({
-      username: "admin",
-      password: "password",
-    }),
-  })
-    .then((response) => response.json())
-    .then((data) => {
-      console.log(data);
-    });
+  const [jwt, setJwt] = useLocalState("", "jwt");
+
+  useEffect(() => {
+    console.log(`JWT IS: ${jwt}`);
+  }, []);
 
   return (
-    <div className="App">
-      <h1> Hello World </h1>
-    </div>
+    <Routes>
+      <Route
+        path="/dashboard"
+        element={
+          <PrivateRoute>
+            <Dashboard />
+          </PrivateRoute>
+        }
+      />
+      <Route path="/login" element={<Login />} />
+      <Route path="/" element={<Homepage />} />
+    </Routes>
   );
 }
 
