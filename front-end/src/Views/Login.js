@@ -27,7 +27,6 @@ const Login = () => {
         .then((data) => {
           const token = data["token"];
           setJwt(token);
-          console.log(data);
           window.location.href = "/dashboard";
         })
         .catch((err) => {

@@ -2,18 +2,13 @@ import "./App.css";
 import { React, useEffect } from "react";
 import { useLocalState } from "./utils/useLocalStorage";
 import { Routes, Route } from "react-router-dom";
-import Dashboard from "./components/Dashboard";
-import Homepage from "./components/Homepage";
-import Login from "./components/Login";
-import PrivateRoute from "./components/PrivateRoute";
+import Dashboard from "./Views/Dashboard";
+import Homepage from "./Views/Homepage";
+import Login from "./Views/Login";
+import PrivateRoute from "./Views/PrivateRoute";
+import AssignmentView from "./Views/AssignmentView";
 
 function App() {
-  const [jwt, setJwt] = useLocalState("", "jwt");
-
-  useEffect(() => {
-    console.log(`JWT IS: ${jwt}`);
-  }, []);
-
   return (
     <Routes>
       <Route
@@ -21,6 +16,14 @@ function App() {
         element={
           <PrivateRoute>
             <Dashboard />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/assignments/:id"
+        element={
+          <PrivateRoute>
+            <AssignmentView />
           </PrivateRoute>
         }
       />
