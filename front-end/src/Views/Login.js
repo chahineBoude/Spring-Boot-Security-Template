@@ -1,5 +1,7 @@
 import React, { Fragment, useState } from "react";
 import { useLocalState } from "../utils/useLocalStorage";
+import ajax from "./../utils/fetchService";
+import { Button, Col, Container, Form, Row } from "react-bootstrap";
 
 const Login = () => {
   const [username, setUsername] = useState("");
@@ -9,7 +11,11 @@ const Login = () => {
 
   function sendLogInRequest() {
     if (!jwt) {
-      fetch("http://localhost:8080/api/auth/login", {
+      let bodyData = {
+        username: username,
+        password: password,
+      };
+      /* fetch("http://localhost:8080/api/auth/login", {
         headers: {
           "Content-Type": "application/json",
         },
@@ -23,7 +29,8 @@ const Login = () => {
           if (response.status === 200) {
             return response.json();
           } else return Promise.reject("Invalid Username or Password");
-        })
+        }) */
+      ajax("http://localhost:8080/api/auth/login", jwt, "POST", bodyData)
         .then((data) => {
           const token = data["token"];
           setJwt(token);
@@ -37,30 +44,45 @@ const Login = () => {
 
   return (
     <Fragment>
-      <div>
-        <h1>Login</h1>
-        <label htmlFor="username">username</label>
-        <input
-          type="text"
-          id="username"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-        />
-      </div>
-      <div>
-        <label htmlFor="password">password</label>
-        <input
-          type="password"
-          id="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
-      </div>
-      <div>
-        <button id="submit" type="button" onClick={() => sendLogInRequest()}>
-          Login
-        </button>
-      </div>
+      <Container className="mt-4">
+        <Form.Group className="mb-3" controlId="formBasicUsername">
+          <h1>Login</h1>
+          <Form.Label className="fs-3">username</Form.Label>
+          <Form.Control
+            type="text"
+            placeholder="username"
+            id="username"
+            value={username}
+            onChange={(e) => {
+              setUsername(e.target.value);
+            }}
+          />
+        </Form.Group>
+        <Form.Group className="mb-3" controlId="formBasicPassword">
+          <Form.Label className="fs-3">password</Form.Label>
+          <Form.Control
+            type="password"
+            id="password"
+            placeholder="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+        </Form.Group>
+        <Row>
+          <Col className="mt-2">
+            <div>
+              <Button
+                id="submit"
+                type="button"
+                size="lg"
+                onClick={() => sendLogInRequest()}
+              >
+                Login
+              </Button>
+            </div>
+          </Col>
+        </Row>
+      </Container>
     </Fragment>
   );
 };

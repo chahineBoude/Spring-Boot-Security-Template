@@ -13,6 +13,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 @RestController
@@ -30,7 +31,7 @@ public class AssignmentController {
     //ADDING INTO ASSIGNMENT TABLE
     @PostMapping("")
     // NO GODDAMN IDEA IF THIS IS HOW YOU'RE SUPPOSED TO DO IT BUT IT WORKS!
-    public ResponseEntity<?> createAssignment (@RequestHeader String Authorization /* Authorization == Bearer ${jwt} */){
+    public ResponseEntity<Assignment> createAssignment (@RequestHeader String Authorization /* Authorization == Bearer ${jwt} */){
         String token = Authorization.substring(7, Authorization.length()); //Get JWT from headers
         String username = jwtUtil.getUserNameFromJwtToken(token);
         User user = userRepository.findByUsername(username).get();
@@ -40,7 +41,7 @@ public class AssignmentController {
     }
 
     @GetMapping("")
-    public ResponseEntity<?> getAssignments(@RequestHeader String Authorization /* Authorization == Bearer ${jwt} */){
+    public ResponseEntity<Set<Assignment>> getAssignments(@RequestHeader String Authorization /* Authorization == Bearer ${jwt} */){
         String token = Authorization.substring(7, Authorization.length()); //Get JWT from headers
         String username = jwtUtil.getUserNameFromJwtToken(token);
         User user = userRepository.findByUsername(username).get();
@@ -49,4 +50,15 @@ public class AssignmentController {
         return ResponseEntity.ok().body(assignments);
     }
 
+    @GetMapping("{assignmentId}")
+    public ResponseEntity<Optional<Assignment>> getAssignment(@PathVariable Long assignmentId){
+        Optional<Assignment> assignment = assignmentService.findById(assignmentId);
+        return ResponseEntity.ok().body(assignment);
+    }
+
+    @PutMapping("{assignmentId}")
+    public ResponseEntity<Assignment> updateAssignment(@PathVariable Long assignmentId, @RequestBody Assignment update){
+        Assignment assignment = assignmentService.save(update);
+        return ResponseEntity.ok().body(assignment);
+    }
 }

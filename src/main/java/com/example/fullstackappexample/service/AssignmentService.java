@@ -6,6 +6,7 @@ import com.example.fullstackappexample.repository.AssignmentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
 import java.util.Set;
 
 @Service
@@ -23,4 +24,13 @@ public class AssignmentService {
     public Set<Assignment> findByUser (User user){
         return assignmentRepository.findByUser(user);
     }
+
+    public Optional<Assignment> findById (Long id) {
+        return assignmentRepository.findById(id);
+    }
+
+    public Assignment save(Assignment assignment){
+        return assignmentRepository.save(assignment);
+    }
+
 }
