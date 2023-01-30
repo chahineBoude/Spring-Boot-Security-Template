@@ -1,3 +1,5 @@
+import { Navigate } from "react-router-dom";
+
 function ajax(url, jwt, requestmethod, requestbody) {
   const fetchData = {
     headers: {
@@ -14,6 +16,11 @@ function ajax(url, jwt, requestmethod, requestbody) {
   return fetch(url, fetchData).then((response) => {
     if (response.status === 200) {
       return response.json();
+    } else if (
+      response.status === 403 &&
+      url.includes("http://localhost:8080/api/assignments/")
+    ) {
+      return <Navigate to="/dashboard" />;
     }
   });
 }

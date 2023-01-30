@@ -45,32 +45,43 @@ const Login = () => {
   return (
     <Fragment>
       <Container className="mt-4">
-        <Form.Group className="mb-3" controlId="formBasicUsername">
-          <h1>Login</h1>
-          <Form.Label className="fs-3">username</Form.Label>
-          <Form.Control
-            type="text"
-            placeholder="username"
-            id="username"
-            value={username}
-            onChange={(e) => {
-              setUsername(e.target.value);
-            }}
-          />
-        </Form.Group>
-        <Form.Group className="mb-3" controlId="formBasicPassword">
-          <Form.Label className="fs-3">password</Form.Label>
-          <Form.Control
-            type="password"
-            id="password"
-            placeholder="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-        </Form.Group>
+        <Row className="justify-content-center align-item-center">
+          <Col md={8} lg={6}>
+            <Form.Group className="mb-3" controlId="formBasicUsername">
+              <h1>Login</h1>
+              <Form.Label className="fs-3">username</Form.Label>
+              <Form.Control
+                type="text"
+                placeholder="username"
+                value={username}
+                onChange={(e) => {
+                  setUsername(e.target.value);
+                }}
+              />
+            </Form.Group>
+          </Col>
+        </Row>
+        <Row className="justify-content-center align-item-center">
+          <Col md={8} lg={6}>
+            <Form.Group className="mb-3" controlId="formBasicPassword">
+              <Form.Label className="fs-3">password</Form.Label>
+              <Form.Control
+                type="password"
+                placeholder="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+            </Form.Group>
+          </Col>
+        </Row>
         <Row>
-          <Col className="mt-2">
-            <div>
+          <div className="d-flex justify-content-center align-item-center">
+            <Col
+              className="mt-2 d-flex flex-column gap-2 flex-md-row justify-content-between"
+              md="8"
+              lg="6"
+              xs="12"
+            >
               <Button
                 id="submit"
                 type="button"
@@ -79,8 +90,18 @@ const Login = () => {
               >
                 Login
               </Button>
-            </div>
-          </Col>
+              <Button
+                type="button"
+                className="btn btn-secondary"
+                size="lg"
+                onClick={() => {
+                  window.location.href = "/";
+                }}
+              >
+                Return
+              </Button>
+            </Col>
+          </div>
         </Row>
       </Container>
     </Fragment>

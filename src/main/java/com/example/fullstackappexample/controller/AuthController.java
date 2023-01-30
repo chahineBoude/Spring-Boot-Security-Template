@@ -4,6 +4,7 @@ import com.example.fullstackappexample.config.JwtUtil;
 import com.example.fullstackappexample.model.UserDetailImpl;
 import com.example.fullstackappexample.request.LoginRequest;
 import com.example.fullstackappexample.response.JwtResponse;
+import org.apache.tomcat.util.http.parser.Authorization;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.ResponseEntity;
@@ -44,6 +45,13 @@ public class AuthController {
                 userDetail.getId(),
                 userDetail.getUsername(),
                 roles));
+    }
+
+    @GetMapping("/validate/")
+    public ResponseEntity<Boolean> checkExpired(@RequestHeader String Authorization){
+        String token = Authorization.substring(7, Authorization.length());
+        Boolean validate = jwtUtil.validateJwtToken(token);
+        return ResponseEntity.ok().body(validate);
     }
 
 }
