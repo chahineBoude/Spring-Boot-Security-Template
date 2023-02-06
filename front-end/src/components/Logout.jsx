@@ -9,11 +9,7 @@ const Logout = () => {
     window.location.reload();
   }
   return (
-    <Button
-      style={{ marginTop: "5px" }}
-      className="btn btn-danger btn-sm"
-      onClick={() => logout()}
-    >
+    <Button className="btn btn-danger" onClick={() => logout()}>
       Logout
     </Button>
   );

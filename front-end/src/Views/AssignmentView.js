@@ -5,17 +5,30 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import { useLocalState } from "../utils/useLocalStorage";
 import ajax from "./../utils/fetchService";
 import Logout from "../components/Logout";
+import {
+  Badge,
+  ButtonGroup,
+  Col,
+  Container,
+  Dropdown,
+  DropdownButton,
+  Form,
+  Row,
+} from "react-bootstrap";
 
 const AssignmentView = () => {
   const [jwt, setJwt] = useLocalState("", "jwt");
   const assignmentId = window.location.href.split("/assignments/")[1];
   const [assignment, setAssignment] = useState({});
+  const [assignmentEnum, setAssignmentEnum] = useState([]);
 
   const urlRef = useRef(null);
   const branchRef = useRef(null);
+  let affich;
 
   function updateAssignment(prop, value) {
     assignment[prop] = value;
+    assignment["status"] = `${prop} of assignment has been updated`;
     console.log(assignment);
   }
 
@@ -38,60 +51,103 @@ const AssignmentView = () => {
       `http://localhost:8080/api/assignments/${assignmentId}`,
       jwt,
       "GET"
-    ).then((assignmentData) => {
+    ).then((assignmentResponse) => {
+      let assignmentData = assignmentResponse.assignment;
+      console.log(assignmentData);
       setAssignment(assignmentData);
+      setAssignmentEnum(assignmentResponse.assignmentEnums);
     });
   }, []);
 
+  useEffect(() => {
+    console.log(assignmentEnum);
+  }, [assignmentEnum]);
+
   return (
-    <div style={{ margin: "30px" }}>
-      <Fragment>
-        <div>
-          <h1>Assignment {assignmentId}</h1>
-          <>
-            <h2>Status: {assignment.status}</h2>
+    <Fragment>
+      <Container>
+        <Row className="d-flex align-items-center">
+          <Col className="col-4">
+            <h1>Assignment {assignmentId}</h1>
+          </Col>
+          <Col>
             <h3>
-              Github URL: {assignment.githubUrl}
-              <br />
-              <input
-                type="url"
-                ref={urlRef}
-                id="githubUrl"
-                style={{ marginTop: "5px", marginLeft: "158px" }}
-                placeholder={assignment.githubUrl}
-                size="30"
-                onChange={(e) => updateAssignment("githubUrl", e.target.value)}
-              />
+              <Badge
+                pill
+                bg={`${
+                  assignment.githubUrl !== null ? "success" : "secondary"
+                }`}
+              >
+                Status: {assignment.status}
+              </Badge>
             </h3>
-            <h3>
-              Branch: {assignment.branch}
-              <br />
-              <input
-                style={{ marginTop: "5px", marginLeft: "100px" }}
-                type="text"
-                ref={branchRef}
-                id="branch"
-                placeholder={assignment.branch}
-                onChange={(e) => updateAssignment("branch", e.target.value)}
-              />
-            </h3>
-            <Button
-              className="btw btn-success"
-              style={{ marginTop: "5px" }}
-              onClick={() => saveUpdates()}
-            >
-              Submit Assignment
-            </Button>
-          </>
-        </div>
-        <div style={{ marginTop: "10px" }}>
-          <Link to="/dashboard" style={{ marginRight: "27px" }}>
-            <Button className="btn btn-danger">Return</Button>
-          </Link>
-          <Logout />
-        </div>
-      </Fragment>
-    </div>
+          </Col>
+        </Row>
+
+        <DropdownButton
+          as={ButtonGroup}
+          id="assignment"
+          variant={"success"}
+          title={`assignment`}
+        >
+          {assignmentEnum.map((enums, i) => (
+            <Dropdown.Item key={i}>
+              Assignment &nbsp;
+              {enums.length === 12
+                ? (affich = enums[11])
+                : (affich = enums[11] + enums[12])}
+            </Dropdown.Item>
+          ))}
+        </DropdownButton>
+        <Form.Group as={Row} className="mb-3" controlId="formPlaintextPassword">
+          <Form.Label column xs="3" sm="2">
+            Github URL:
+          </Form.Label>
+          <Col xs="9" sm="10">
+            <Form.Control
+              type="url"
+              placeholder={assignment.githubUrl}
+              onChange={(e) => updateAssignment("githubUrl", e.target.value)}
+              ref={urlRef}
+            />
+          </Col>
+        </Form.Group>
+        <Form.Group as={Row} className="mb-3" controlId="formPlaintextPassword">
+          <Form.Label column xs="3" sm="2">
+            Branch
+          </Form.Label>
+          <Col xs="9" sm="10">
+            <Form.Control
+              type="text"
+              placeholder={assignment.branch}
+              onChange={(e) => updateAssignment("branch", e.target.value)}
+              ref={branchRef}
+            />
+          </Col>
+        </Form.Group>
+        <Button
+          className="btw btn-success"
+          style={{ marginTop: "5px" }}
+          onClick={() => saveUpdates()}
+        >
+          Submit Assignment
+        </Button>
+      </Container>
+      <Container className="mt-2 d-flex ">
+        <Row>
+          <ButtonGroup>
+            <Col xs="7">
+              <Link to="/dashboard">
+                <Button className="btn btn-danger">Return</Button>
+              </Link>
+            </Col>
+            <Col xs="2">
+              <Logout />
+            </Col>
+          </ButtonGroup>
+        </Row>
+      </Container>
+    </Fragment>
   );
 };
 

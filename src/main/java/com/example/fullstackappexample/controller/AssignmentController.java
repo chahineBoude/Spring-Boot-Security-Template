@@ -1,6 +1,7 @@
 package com.example.fullstackappexample.controller;
 
 import com.example.fullstackappexample.config.JwtUtil;
+import com.example.fullstackappexample.dto.AssignmentResponseDto;
 import com.example.fullstackappexample.model.Assignment;
 import com.example.fullstackappexample.model.User;
 import com.example.fullstackappexample.repository.AssignmentRepository;
@@ -51,14 +52,23 @@ public class AssignmentController {
     }
 
     @GetMapping("{assignmentId}")
-    public ResponseEntity<Optional<Assignment>> getAssignment(@PathVariable Long assignmentId){
+    public ResponseEntity<?> getAssignment(@PathVariable Long assignmentId){
         Optional<Assignment> assignment = assignmentService.findById(assignmentId);
-        return ResponseEntity.ok().body(assignment);
+        AssignmentResponseDto assignmentResponseDto = new AssignmentResponseDto(assignment.orElse(new Assignment()));
+        return ResponseEntity.ok().body(assignmentResponseDto);
     }
 
     @PutMapping("{assignmentId}")
-    public ResponseEntity<Assignment> updateAssignment(@PathVariable Long assignmentId, @RequestBody Assignment update){
+    public ResponseEntity<?> updateAssignment(@PathVariable Long assignmentId, @RequestBody Assignment update){
         Assignment assignment = assignmentService.save(update);
         return ResponseEntity.ok().body(assignment);
     }
+
+    @DeleteMapping("/delete/{assignmentId}")
+    public ResponseEntity<Void> deleteAssignment(@PathVariable Long assignmentId){
+        System.out.print(assignmentId);
+        assignmentService.delete(assignmentId);
+        return ResponseEntity.ok().build();
+    }
+
 }

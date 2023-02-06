@@ -33,4 +33,8 @@ public class AssignmentService {
         return assignmentRepository.save(assignment);
     }
 
+    public void delete(Long id){
+        assignmentRepository.deleteById(id);
+    }
+
 }

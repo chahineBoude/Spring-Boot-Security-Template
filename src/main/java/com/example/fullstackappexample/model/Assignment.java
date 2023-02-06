@@ -8,6 +8,7 @@ public class Assignment {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+    private Integer number;
     private String status;
     private String githubUrl;
     private String branch;
@@ -25,6 +26,14 @@ public class Assignment {
         this.githubUrl = githubUrl;
         this.branch = branch;
         this.videoUrl = videoUrl;
+    }
+
+    public Integer getNumber() {
+        return number;
+    }
+
+    public void setNumber(Integer number) {
+        this.number = number;
     }
 
     public Long getId() {
