@@ -21,6 +21,7 @@ const AssignmentView = () => {
   const assignmentId = window.location.href.split("/assignments/")[1];
   const [assignment, setAssignment] = useState({});
   const [assignmentEnum, setAssignmentEnum] = useState([]);
+  const [selectedAssignment, setSelectedAssignment] = useState(null);
 
   const urlRef = useRef(null);
   const branchRef = useRef(null);
@@ -59,10 +60,6 @@ const AssignmentView = () => {
     });
   }, []);
 
-  useEffect(() => {
-    console.log(assignmentEnum);
-  }, [assignmentEnum]);
-
   return (
     <Fragment>
       <Container>
@@ -84,22 +81,52 @@ const AssignmentView = () => {
           </Col>
         </Row>
 
-        <DropdownButton
-          as={ButtonGroup}
-          id="assignment"
-          variant={"success"}
-          title={`assignment`}
-        >
-          {assignmentEnum.map((enums, i) => (
-            <Dropdown.Item key={i}>
-              Assignment &nbsp;
-              {enums.length === 12
-                ? (affich = enums[11])
-                : (affich = enums[11] + enums[12])}
-            </Dropdown.Item>
-          ))}
-        </DropdownButton>
         <Form.Group as={Row} className="mb-3" controlId="formPlaintextPassword">
+          <Form.Label column xs="3" sm="2">
+            Go To Assignment:
+          </Form.Label>
+          <Col xs="9" sm="10" className="mb-3">
+            <ButtonGroup>
+              <DropdownButton
+                as={ButtonGroup}
+                id="assignment"
+                variant={"success"}
+                title={
+                  selectedAssignment
+                    ? `Assignment ${selectedAssignment}`
+                    : "Select an assignment"
+                }
+                onSelect={(e) => {
+                  e === "deselect"
+                    ? setSelectedAssignment(null)
+                    : setSelectedAssignment(e);
+                }}
+                onChange={(e) => {
+                  window.location = `/assignments/${selectedAssignment}`;
+                }}
+              >
+                {assignmentEnum.map((enums, i) => (
+                  <Dropdown.Item
+                    className="dditem"
+                    eventKey={
+                      enums.length === 12
+                        ? (affich = enums[11])
+                        : (affich = enums[11] + enums[12])
+                    }
+                    key={i}
+                  >
+                    Assignment &nbsp;
+                    {enums.length === 12
+                      ? (affich = enums[11])
+                      : (affich = enums[11] + enums[12])}
+                  </Dropdown.Item>
+                ))}
+                <Dropdown.Item className="dditem-cancel" eventKey={"deselect"}>
+                  Cancel
+                </Dropdown.Item>
+              </DropdownButton>
+            </ButtonGroup>
+          </Col>
           <Form.Label column xs="3" sm="2">
             Github URL:
           </Form.Label>
